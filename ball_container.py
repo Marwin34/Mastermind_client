@@ -13,8 +13,6 @@ class Ball:
         self.identity = identity
         self.hoovered = False
 
-        self.value = True
-
     def draw(self, display):
         brighter = pygame.Color(100, 100, 100, 0)
         darker = pygame.Color(50, 50, 50, 0)
@@ -29,6 +27,7 @@ class Ball:
     def hoover(self, mouse_pos):
         self.hoovered = np.sqrt((self.x - mouse_pos[0]) ** 2 + (self.y - mouse_pos[1]) ** 2) <= self.r
 
-    def clicked(self, mouse_buttons_state):
+    def clicked(self, mouse_buttons_state, color):
         if mouse_buttons_state[0]:
-            self.callback(self.identity, self.value)
+            self.color = pygame.Color(color)
+            self.callback(self.identity, color)

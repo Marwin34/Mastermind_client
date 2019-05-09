@@ -36,7 +36,6 @@ class Main:
         last_update = 0
         while self.running:
             if time.perf_counter() - last_update >= self.time_stamp:
-
                 self.handle_events()
 
                 self.gui.update("IN-GAME", self.process_input)
@@ -53,7 +52,12 @@ class Main:
                 self.running = False
 
     def process_input(self, inputs):
-        self.picked_colors = inputs['picked_colors']
+        self.picked_colors = [
+            inputs['color_slot_1'],
+            inputs['color_slot_2'],
+            inputs['color_slot_3'],
+            inputs['color_slot_4']
+        ]
 
         if inputs['send']:
             self.send()

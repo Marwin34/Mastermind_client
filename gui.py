@@ -1,6 +1,7 @@
 import numpy as np
 import pygame
 import ball_button
+import ball_container
 
 
 class GUI:
@@ -15,20 +16,26 @@ class GUI:
             'color_picker_blue': False,
             'color_picker_green': False,
             'color_picker_yellow': False,
-            'color_slot_1': False,
-            'color_slot_2': False,
-            'color_slot_3': False,
-            'color_slot_4': False,
-            'picked_colors': ['gray', 'gray', 'gray', 'gray']
+            'color_slot_1': 'gray',
+            'color_slot_2': 'gray',
+            'color_slot_3': 'gray',
+            'color_slot_4': 'gray'
         }
 
-        self.picked_color = None
+        self.picked_color = 'gray'
 
         self.ball_buttons = [
             ball_button.Ball(550, 440, 25, 'blue', self.set, 'color_picker_blue'),
             ball_button.Ball(610, 440, 25, 'green', self.set, 'color_picker_green'),
             ball_button.Ball(670, 440, 25, 'red', self.set, 'color_picker_red'),
             ball_button.Ball(730, 440, 25, 'yellow', self.set, 'color_picker_yellow')
+        ]
+
+        self.ball_containers = [
+            ball_container.Ball(60, 440, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(120, 440, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(180, 440, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(240, 440, 25, 'gray', self.set, 'color_slot_4')
         ]
 
     def update(self, state, process):
@@ -39,14 +46,18 @@ class GUI:
         self.display.fill((0, 0, 0))
 
         if state == "IN-GAME":
-            self.reset_all()
+            self.reset_ball_buttons()
 
-            for ball in self.ball_buttons:
+            for ball in self.ball_buttons + self.ball_containers:
                 ball.hoover(self.input['mouse_pos'])
 
             for ball in self.ball_buttons:
                 if ball.intersect():
-                    ball.clicked(pygame.mouse.get_pressed())
+                    ball.clicked(self.input['LPM'])
+
+            for ball in self.ball_containers:
+                if ball.intersect():
+                    ball.clicked(self.input['LPM'], self.picked_color)
 
             if self.input['color_picker_blue']:
                 self.picked_color = 'blue'
@@ -57,37 +68,27 @@ class GUI:
             elif self.input['color_picker_yellow']:
                 self.picked_color = 'yellow'
 
-            self.slot_circle(60, 440, 25, self.input['picked_colors'][0], 'color_slot_1', 0)
-            self.slot_circle(120, 440, 25, self.input['picked_colors'][1], 'color_slot_2', 1)
-            self.slot_circle(180, 440, 25, self.input['picked_colors'][2], 'color_slot_3', 2)
-            self.slot_circle(240, 440, 25, self.input['picked_colors'][3], 'color_slot_4', 3)
-
             self.button_rect(345, 420, 100, 40, 'green', 'send', "SEND")
 
-            for ball in self.ball_buttons:
+            for ball in self.ball_buttons + self.ball_containers:
                 ball.draw(self.display)
 
         process(self.input)
 
-    def set(self, identity):
-        self.input[identity] = True
+    def set(self, identity, val):
+        self.input[identity] = val
 
-    def reset_all(self):
+    def reset_ball_buttons(self):
         self.input['color_picker_red'] = False
         self.input['color_picker_green'] = False
         self.input['color_picker_blue'] = False
         self.input['color_picker_yellow'] = False
 
-    def slot_circle(self, x, y, r, color, target, index):
-        if self.intersect(x, y, r=r):
-            pygame.draw.circle(self.display, pygame.Color(color) + pygame.Color(100, 100, 100, 0), (x, y), r)
-            if self.input['LPM']:
-                if self.picked_color:
-                    self.input[target] = True
-                    self.input['picked_colors'][index] = self.picked_color
-
-        else:
-            pygame.draw.circle(self.display, pygame.Color(color) - pygame.Color(50, 50, 50, 0), (x, y), r)
+    def reset_ball_containers(self):
+        self.input['color_slot_1'] = 'gray'
+        self.input['color_slot_2'] = 'gray'
+        self.input['color_slot_3'] = 'gray'
+        self.input['color_slot_4'] = 'gray'
 
     def button_rect(self, x, y, w, h, color, target, text):
 
