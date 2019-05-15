@@ -1,8 +1,8 @@
-import numpy as np
 import pygame
 import ball_button
 import ball_container
 import mouse_observer
+import rectangle_button
 from observer_type import ObserverType
 
 
@@ -50,6 +50,13 @@ class GUI:
             self.mouse_observer.register(button.hoover, ObserverType.MOUSE_POS_CHANGES)
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
+        self.rectangle_buttons = [
+            rectangle_button.Rectangle(345, 420, 100, 40, 'green', "SEND", None, 36, self.set, 'send')
+        ]
+
+        self.mouse_observer.register(self.rectangle_buttons[0].hoover, ObserverType.MOUSE_POS_CHANGES)
+        self.mouse_observer.register(self.rectangle_buttons[0].clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
+
     def update(self, state, process):
         self.input['send'] = False
         self.input['mouse_pos'] = pygame.mouse.get_pos()
@@ -70,14 +77,17 @@ class GUI:
                 self.picked_color = 'red'
             elif self.input['color_picker_yellow']:
                 self.picked_color = 'yellow'
+            elif self.input['send']:
+                self.input['send'] = True
 
             for ball in self.ball_containers:
                 ball.expect_color(self.picked_color)
 
-            self.button_rect(345, 420, 100, 40, 'green', 'send', "SEND")
-
             for ball in self.ball_buttons + self.ball_containers:
                 ball.draw(self.display)
+
+            for rectangle in self.rectangle_buttons:
+                rectangle.draw(self.display)
 
         process(self.input)
 
@@ -95,29 +105,3 @@ class GUI:
         self.input['color_slot_2'] = 'gray'
         self.input['color_slot_3'] = 'gray'
         self.input['color_slot_4'] = 'gray'
-
-    def button_rect(self, x, y, w, h, color, target, text):
-
-        small_text = pygame.font.Font(None, 36)
-        rendered_text = small_text.render(text, 1, (0, 0, 0))
-
-        if self.intersect(x, y, w=w, h=h):
-            pygame.draw.rect(self.display, pygame.Color(color) + pygame.Color(100, 100, 100, 0), (x, y, w, h))
-            if self.input['LPM']:
-                self.input[target] = True
-                self.picked_color = color
-        else:
-            pygame.draw.rect(self.display, pygame.Color(color) - pygame.Color(50, 50, 50, 0), (x, y, w, h))
-
-        self.display.blit(rendered_text, (x + w / 2 - (18 * 4) / 2, y + (h / 2) - (36 / 2)))
-
-    def intersect(self, x, y, r=None, w=None, h=None):
-        if r:
-            if np.sqrt((x - self.input['mouse_pos'][0]) ** 2 + (y - self.input['mouse_pos'][1]) ** 2) <= r:
-                return True
-        elif w and h:
-            if x <= self.input['mouse_pos'][0] <= x + w and \
-                    y <= self.input['mouse_pos'][1] <= y + h:
-                return True
-
-            return False
