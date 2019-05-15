@@ -23,12 +23,9 @@ class Ball:
         else:
             pygame.draw.circle(display, self.color - darker, (self.x, self.y), self.r)
 
-    def intersect(self):
-        return self.hoovered
-
     def hoover(self, mouse_pos):
         self.hoovered = np.sqrt((self.x - mouse_pos[0]) ** 2 + (self.y - mouse_pos[1]) ** 2) <= self.r
 
     def clicked(self, mouse_buttons_state):
-        if mouse_buttons_state[0]:
+        if mouse_buttons_state[0] and self.hoovered:
             self.callback(self.identity, self.value)

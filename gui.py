@@ -2,16 +2,20 @@ import numpy as np
 import pygame
 import ball_button
 import ball_container
+import mouse_observer
+from observer_type import ObserverType
 
 
 class GUI:
     def __init__(self, display):
+        self.mouse_observer = mouse_observer.MouseObserver()
+
         self.display = display
 
         self.input = {
             'send': False,
             'mouse_pos': (0, 0),
-            'LPM': 0,
+            'mouse_buttons': (0, 0, 0),
             'color_picker_red': False,
             'color_picker_blue': False,
             'color_picker_green': False,
@@ -31,6 +35,10 @@ class GUI:
             ball_button.Ball(730, 440, 25, 'yellow', self.set, 'color_picker_yellow')
         ]
 
+        for button in self.ball_buttons:
+            self.mouse_observer.register(button.hoover, ObserverType.MOUSE_POS_CHANGES)
+            self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
+
         self.ball_containers = [
             ball_container.Ball(60, 440, 25, 'gray', self.set, 'color_slot_1'),
             ball_container.Ball(120, 440, 25, 'gray', self.set, 'color_slot_2'),
@@ -38,26 +46,21 @@ class GUI:
             ball_container.Ball(240, 440, 25, 'gray', self.set, 'color_slot_4')
         ]
 
+        for button in self.ball_containers:
+            self.mouse_observer.register(button.hoover, ObserverType.MOUSE_POS_CHANGES)
+            self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
+
     def update(self, state, process):
         self.input['send'] = False
         self.input['mouse_pos'] = pygame.mouse.get_pos()
-        self.input['LPM'] = pygame.mouse.get_pressed()[0]
+        self.input['mouse_buttons'] = pygame.mouse.get_pressed()
 
         self.display.fill((0, 0, 0))
 
         if state == "IN-GAME":
             self.reset_ball_buttons()
 
-            for ball in self.ball_buttons + self.ball_containers:
-                ball.hoover(self.input['mouse_pos'])
-
-            for ball in self.ball_buttons:
-                if ball.intersect():
-                    ball.clicked(self.input['LPM'])
-
-            for ball in self.ball_containers:
-                if ball.intersect():
-                    ball.clicked(self.input['LPM'], self.picked_color)
+            self.mouse_observer.notify(self.input['mouse_buttons'], self.input['mouse_pos'])
 
             if self.input['color_picker_blue']:
                 self.picked_color = 'blue'
@@ -67,6 +70,9 @@ class GUI:
                 self.picked_color = 'red'
             elif self.input['color_picker_yellow']:
                 self.picked_color = 'yellow'
+
+            for ball in self.ball_containers:
+                ball.expect_color(self.picked_color)
 
             self.button_rect(345, 420, 100, 40, 'green', 'send', "SEND")
 

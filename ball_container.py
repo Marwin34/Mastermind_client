@@ -8,6 +8,7 @@ class Ball:
         self.y = y
         self.r = r
         self.color = pygame.Color(color)
+        self.expected_color = color
 
         self.callback = callback
         self.identity = identity
@@ -21,13 +22,13 @@ class Ball:
         else:
             pygame.draw.circle(display, self.color - darker, (self.x, self.y), self.r)
 
-    def intersect(self):
-        return self.hoovered
-
     def hoover(self, mouse_pos):
         self.hoovered = np.sqrt((self.x - mouse_pos[0]) ** 2 + (self.y - mouse_pos[1]) ** 2) <= self.r
 
-    def clicked(self, mouse_buttons_state, color):
-        if mouse_buttons_state[0]:
-            self.color = pygame.Color(color)
-            self.callback(self.identity, color)
+    def expect_color(self, color):
+        self.expected_color = color
+
+    def clicked(self, mouse_buttons_state):
+        if mouse_buttons_state[0] and self.hoovered:
+            self.color = pygame.Color(self.expected_color)
+            self.callback(self.identity, self.expected_color)
