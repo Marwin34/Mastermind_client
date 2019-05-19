@@ -24,4 +24,4 @@ class ComSupervisor:
         print("Received", data)
 
     def get_info(self):
-        return (self.addr, self.port)
+        return self.addr, self.port

@@ -1,32 +1,33 @@
 import communication
 import time
 import pygame
-import gui
+from game_states import MainMenu, InGame
+from state_type import StateType
 
 
 class Main:
     def __init__(self):
+        pygame.init()
         self.connected = True
         self.running = True
 
         self.size = self.width, self.height = [800, 600]
 
         self.display = pygame.Surface
+        self.display = pygame.display.set_mode(size=self.size)
 
         self.communication_module = None
 
         self.time_stamp = 0.016  # 60 FPS
 
-        self.gui = None
-
         self.picked_colors = [None, None, None, None]
 
+        self.main_menu_state = MainMenu(self.quit, self.change_state, StateType.MAIN_MENU, self.display)
+        self.in_game_state = InGame(self.quit, self.change_state, StateType.IN_GAME, self.display)
+
+        self.active_state = self.main_menu_state
+
     def run(self):
-        pygame.init()
-        self.display = pygame.display.set_mode(size=self.size)
-
-        self.gui = gui.GUI(self.display)
-
         self.communication_module = communication.ComSupervisor("127.0.0.1", 50001)
 
         if not self.communication_module.connect():
@@ -36,9 +37,9 @@ class Main:
         last_update = 0
         while self.running:
             if time.perf_counter() - last_update >= self.time_stamp:
-                self.handle_events()
 
-                self.gui.update("IN-GAME", self.process_input)
+                self.active_state.update()
+                self.active_state.draw()
                 pygame.display.flip()
 
                 # print(1 / (time.perf_counter() - last_update))
@@ -46,10 +47,14 @@ class Main:
 
         pygame.quit()
 
-    def handle_events(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
+    def change_state(self, state_type):
+        if state_type == StateType.MAIN_MENU:
+            self.active_state = self.in_game_state
+        elif state_type == StateType.IN_GAME:
+            self.active_state = self.main_menu_state
+
+    def quit(self):
+        self.running = False
 
     def process_input(self, inputs):
         self.picked_colors = [
