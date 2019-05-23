@@ -1,5 +1,5 @@
 from abstract_game_state import GameState
-from gui_state import MainMenuGUI, WaitingForOpponentGUI, InGameGUI
+from gui_state import MainMenuGUI, WaitingForOpponentGUI, InGameGUI, CodeDefineGUI
 import pygame
 from mouse_observer import MouseObserver
 from keyboard_observer import KeyboardObserver
@@ -103,11 +103,14 @@ class InGame(GameState):
         self.change_state_callback = change_state_callback
         self.state_type = state_type
         self.display = display
-        self.gui = InGameGUI(self.display, self.m_observer)
+        self.code_gui = CodeDefineGUI(self.display, self.m_observer)
+        self.table_gui = InGameGUI(self.display, self.m_observer)
+        self.gui = self.code_gui
         self.communication = communication_module
 
         self.commands = {
             'send': False,
+            'code_init': False,
             'quit': False
         }
 
@@ -127,6 +130,8 @@ class InGame(GameState):
         if data:
             if data['type'] == 'quit':
                 self.quit_callback()
+            if data['type'] == 'start_game':
+                self.gui = self.table_gui
 
     def draw(self):
         self.gui.draw()
@@ -150,15 +155,30 @@ class InGame(GameState):
                         self.data_container['color_slot_4']
                     ]
                 }
+
+                self.communication.send(data)
+            elif self.commands['code_init']:
+                color_1 = self.data_container['color_slot_1']
+                color_2 = self.data_container['color_slot_2']
+                color_3 = self.data_container['color_slot_3']
+                color_4 = self.data_container['color_slot_4']
+
+                if color_1 != 'gray' and color_2 != 'gray' and color_3 != 'gray' and color_4 != 'gray':
+                    data = {
+                        'type': 'code_init',
+                        'value': [color_1, color_2, color_3, color_4]
+                    }
+
+                    print(data)
+                    self.communication.send(data)
+
             else:
                 data = {
                     'type': 'quit',
                     'value': 'quit_request'
                 }
 
-            print(data)
-
-            self.communication.send(data)
+                self.communication.send(data)
 
     def next(self):
         self.change_state_callback(self.state_type)
@@ -173,15 +193,26 @@ class InGame(GameState):
         self.data_container['color_slot_4'] = 'gray'
 
     def process_input(self, inputs):
-        self.commands['send'] = inputs['send']
+        if self.gui == self.code_gui:
+            self.commands['code_init'] = inputs['code_init']
 
-        self.data_container['color_slot_1'] = inputs['color_slot_1']
-        self.data_container['color_slot_2'] = inputs['color_slot_2']
-        self.data_container['color_slot_3'] = inputs['color_slot_3']
-        self.data_container['color_slot_4'] = inputs['color_slot_4']
+            self.data_container['color_slot_1'] = inputs['color_slot_1']
+            self.data_container['color_slot_2'] = inputs['color_slot_2']
+            self.data_container['color_slot_3'] = inputs['color_slot_3']
+            self.data_container['color_slot_4'] = inputs['color_slot_4']
 
-        if self.commands['send'] or self.commands['quit']:
-            self.send()
+            if self.commands['code_init'] or self.commands['quit']:
+                self.send()
+        else:
+            self.commands['send'] = inputs['send']
+
+            self.data_container['color_slot_1'] = inputs['color_slot_1']
+            self.data_container['color_slot_2'] = inputs['color_slot_2']
+            self.data_container['color_slot_3'] = inputs['color_slot_3']
+            self.data_container['color_slot_4'] = inputs['color_slot_4']
+
+            if self.commands['send'] or self.commands['quit']:
+                self.send()
 
         self.reset_commands()
 
@@ -215,7 +246,7 @@ class WaitingForOpponent(GameState):
         data = self.communication.receive()
 
         if data:
-            if data['type'] == 'server_response' and data['value']:
+            if data['type'] == 'joined_table' and data['value']:
                 self.next()
             elif data['type'] == 'quit':
                 self.quit_callback()
