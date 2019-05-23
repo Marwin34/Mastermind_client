@@ -130,8 +130,10 @@ class InGame(GameState):
         if data:
             if data['type'] == 'quit':
                 self.quit_callback()
-            if data['type'] == 'start_game':
+            elif data['type'] == 'start_game':
                 self.gui = self.table_gui
+            elif data['type'] == 'table_update':
+                self.gui.display_response(data['value'])
 
     def draw(self):
         self.gui.draw()
@@ -146,31 +148,36 @@ class InGame(GameState):
                 print("Unable to connect to server, check your internet connection or try again later.")
         else:
             if self.commands['send']:
+                request_value = [
+                    self.data_container['color_slot_1'],
+                    self.data_container['color_slot_2'],
+                    self.data_container['color_slot_3'],
+                    self.data_container['color_slot_4']
+                ]
                 data = {
                     'type': 'picked_colors',
-                    'value': [
-                        self.data_container['color_slot_1'],
-                        self.data_container['color_slot_2'],
-                        self.data_container['color_slot_3'],
-                        self.data_container['color_slot_4']
-                    ]
+                    'value': request_value
                 }
 
-                self.communication.send(data)
-            elif self.commands['code_init']:
-                color_1 = self.data_container['color_slot_1']
-                color_2 = self.data_container['color_slot_2']
-                color_3 = self.data_container['color_slot_3']
-                color_4 = self.data_container['color_slot_4']
-
-                if color_1 != 'gray' and color_2 != 'gray' and color_3 != 'gray' and color_4 != 'gray':
-                    data = {
-                        'type': 'code_init',
-                        'value': [color_1, color_2, color_3, color_4]
-                    }
-
-                    print(data)
+                if 'gray' not in request_value:
                     self.communication.send(data)
+                    self.gui.reset_containers()
+
+            elif self.commands['code_init']:
+                request_value = [
+                    self.data_container['color_slot_1'],
+                    self.data_container['color_slot_2'],
+                    self.data_container['color_slot_3'],
+                    self.data_container['color_slot_4']
+                ]
+                data = {
+                    'type': 'code_init',
+                    'value': request_value
+                }
+
+                if 'gray' not in request_value:
+                    self.communication.send(data)
+                    self.gui.reset_containers()
 
             else:
                 data = {
@@ -186,6 +193,7 @@ class InGame(GameState):
     def reset_commands(self):
         self.commands['send'] = False
         self.commands['quit'] = False
+        self.commands['code_init'] = False
 
         self.data_container['color_slot_1'] = 'gray'
         self.data_container['color_slot_2'] = 'gray'

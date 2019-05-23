@@ -14,10 +14,12 @@ class Ball:
         self.identity = identity
         self.hoovered = False
 
+        self.active = True
+
     def draw(self, display):
         brighter = pygame.Color(100, 100, 100, 0)
         darker = pygame.Color(50, 50, 50, 0)
-        if self.hoovered:
+        if self.hoovered and self.active:
             pygame.draw.circle(display, self.color + brighter, (self.x, self.y), self.r)
         else:
             pygame.draw.circle(display, self.color - darker, (self.x, self.y), self.r)
@@ -29,6 +31,15 @@ class Ball:
         self.expected_color = color
 
     def clicked(self, mouse_buttons_state):
-        if mouse_buttons_state[0] and self.hoovered:
+        if mouse_buttons_state[0] and self.hoovered and self.active:
             self.color = pygame.Color(self.expected_color)
             self.callback(self.identity, self.expected_color)
+
+    def set_color(self, color):
+        self.color = pygame.Color(color)
+
+    def disable(self):
+        self.active = False
+
+    def enable(self):
+        self.active = True
