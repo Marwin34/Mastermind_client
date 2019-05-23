@@ -13,3 +13,8 @@ class GUIState(ABC):
     @abstractmethod
     def set(self, identity, val):
         pass
+
+    @abstractmethod
+    def reset_input(self):
+        pass
+

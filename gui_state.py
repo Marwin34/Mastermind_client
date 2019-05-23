@@ -21,8 +21,7 @@ class MainMenuGUI(GUIState):
             'login': False,
             'nick': "",
             'mouse_pos': (0, 0),
-            'mouse_buttons': (0, 0, 0),
-            'quit': False
+            'mouse_buttons': (0, 0, 0)
         }
 
         self.rectangle_buttons = [
@@ -43,6 +42,7 @@ class MainMenuGUI(GUIState):
 
     def update(self, process):
         process(self.input)
+        self.reset_input()
 
     def draw(self):
         self.display.fill(pygame.Color('green'))
@@ -55,6 +55,9 @@ class MainMenuGUI(GUIState):
 
     def set(self, identity, val):
         self.input[identity] = val
+
+    def reset_input(self):
+        self.input['login'] = False
 
 
 class InGameGUI(GUIState):
@@ -75,8 +78,7 @@ class InGameGUI(GUIState):
             'color_slot_1': 'gray',
             'color_slot_2': 'gray',
             'color_slot_3': 'gray',
-            'color_slot_4': 'gray',
-            'quit': False,
+            'color_slot_4': 'gray'
         }
 
         self.picked_color = 'gray'
@@ -111,14 +113,6 @@ class InGameGUI(GUIState):
         self.mouse_observer.register(self.rectangle_buttons[0].clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
     def update(self, process):
-        self.input['send'] = False
-        self.input['mouse_pos'] = pygame.mouse.get_pos()
-        self.input['mouse_buttons'] = pygame.mouse.get_pressed()
-
-        self.reset_ball_buttons()
-
-        # self.mouse_observer.notify(self.input['mouse_buttons'], self.input['mouse_pos'])
-
         if self.input['color_picker_blue']:
             self.picked_color = 'blue'
         elif self.input['color_picker_green']:
@@ -132,6 +126,7 @@ class InGameGUI(GUIState):
             ball.expect_color(self.picked_color)
 
         process(self.input)
+        self.reset_input()
 
     def draw(self):
         self.display.fill((0, 0, 0))
@@ -145,14 +140,39 @@ class InGameGUI(GUIState):
     def set(self, identity, val):
         self.input[identity] = val
 
-    def reset_ball_buttons(self):
+    def reset_input(self):
+        self.input['send'] = False
         self.input['color_picker_red'] = False
         self.input['color_picker_green'] = False
         self.input['color_picker_blue'] = False
         self.input['color_picker_yellow'] = False
 
-    def reset_ball_containers(self):
-        self.input['color_slot_1'] = 'gray'
-        self.input['color_slot_2'] = 'gray'
-        self.input['color_slot_3'] = 'gray'
-        self.input['color_slot_4'] = 'gray'
+
+class WaitingForOpponentGUI(GUIState):
+    def __init__(self, display, mouse_observer=None, keyboard_observer=None):
+        self.mouse_observer = mouse_observer
+        self.keyboard_observer = keyboard_observer
+
+        self.message_text = "WAITING FOR OPPONENT ..."
+
+        self.message_x = 400 - len(self.message_text) / 2 * 27
+        self.message_y = 300 - 50 / 2
+
+        self.display = display
+
+        self.text = pygame.font.Font(consolas_font.consola, 50)
+        self.rendered_text = self.text.render(self.message_text, 1, (pygame.Color('black')))
+
+    def update(self, process):
+        process(None)
+
+    def draw(self):
+        self.display.fill(pygame.Color('blue'))
+
+        self.display.blit(self.rendered_text, (self.message_x, self.message_y))
+
+    def set(self, identity, val):
+        pass
+
+    def reset_input(self):
+        pass

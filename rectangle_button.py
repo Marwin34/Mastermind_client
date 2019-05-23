@@ -5,9 +5,11 @@ class Rectangle:
     def __init__(self, x, y, w, h, color, text, font, font_size, callback, identity):
         self.x = x
         self.y = y
-        self.w = w
-        self.h = h
+        self.w = len(text) * 21 + 20
+        self.h = font_size + 10
         self.color = pygame.Color(color)
+
+        self.text_len = len(text)
 
         self.callback = callback
         self.identity = identity
@@ -26,7 +28,8 @@ class Rectangle:
         else:
             pygame.draw.rect(display, self.color - darker, (self.x, self.y, self.w, self.h))
 
-        display.blit(self.rendered_text, (self.x + self.w / 2 - (18 * 4) / 2, self.y + (self.h / 2) - (36 / 2)))
+        display.blit(self.rendered_text,
+                     (self.x + self.w / 2 - (21 * self.text_len / 2), self.y + (self.h / 2) - (36 / 2)))
 
     def hoover(self, mouse_pos):
         self.hoovered = (self.x <= mouse_pos[0] <= self.x + self.w and
