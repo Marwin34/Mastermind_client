@@ -6,6 +6,7 @@ from observer_type import ObserverType
 from abstract_gui_state import GUIState
 from text_input import TextInput
 import consolas_font
+import display_settings
 
 
 # TODO better graphics, send key bug sfter reentering queue, displaying players info
@@ -88,6 +89,14 @@ class InGameGUI(GUIState):
         self.rendered_player_2_pos_x = 0
         self.rendered_player_2_pos_y = 0
 
+        self.rendered_outcome_pos_x = 0
+        self.rendered_outcome_pos_y = 0
+
+        self.game_over_message = ""
+
+        self.text = pygame.font.Font(consolas_font.consola, 40)
+        self.rendered_outcome = self.text.render("", 1, (pygame.Color('black')))
+
         self.input = {
             'send': False,
             'look_for_opponent': False,
@@ -104,10 +113,10 @@ class InGameGUI(GUIState):
         self.picked_color = 'gray'
 
         self.ball_buttons = [
-            ball_button.Ball(60, 510, 25, 'blue', self.set, 'color_picker_blue'),
-            ball_button.Ball(120, 510, 25, 'green', self.set, 'color_picker_green'),
-            ball_button.Ball(180, 510, 25, 'red', self.set, 'color_picker_red'),
-            ball_button.Ball(240, 510, 25, 'yellow', self.set, 'color_picker_yellow')
+            ball_button.Ball(130, 600, 25, 'blue', self.set, 'color_picker_blue'),
+            ball_button.Ball(190, 600, 25, 'green', self.set, 'color_picker_green'),
+            ball_button.Ball(250, 600, 25, 'red', self.set, 'color_picker_red'),
+            ball_button.Ball(310, 600, 25, 'yellow', self.set, 'color_picker_yellow')
         ]
 
         for button in self.ball_buttons:
@@ -115,129 +124,129 @@ class InGameGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.ball_containers = [
-            ball_container.Ball(60, 440, 25, 'gray', self.set, 'color_slot_1'),
-            ball_container.Ball(120, 440, 25, 'gray', self.set, 'color_slot_2'),
-            ball_container.Ball(180, 440, 25, 'gray', self.set, 'color_slot_3'),
-            ball_container.Ball(240, 440, 25, 'gray', self.set, 'color_slot_4'),
+            ball_container.Ball(130, 520, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(190, 520, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(250, 520, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(310, 520, 25, 'gray', self.set, 'color_slot_4'),
 
-            ball_container.Ball(60, 380, 25, 'gray', self.set, 'color_slot_1'),
-            ball_container.Ball(120, 380, 25, 'gray', self.set, 'color_slot_2'),
-            ball_container.Ball(180, 380, 25, 'gray', self.set, 'color_slot_3'),
-            ball_container.Ball(240, 380, 25, 'gray', self.set, 'color_slot_4'),
+            ball_container.Ball(130, 460, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(190, 460, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(250, 460, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(310, 460, 25, 'gray', self.set, 'color_slot_4'),
 
-            ball_container.Ball(60, 320, 25, 'gray', self.set, 'color_slot_1'),
-            ball_container.Ball(120, 320, 25, 'gray', self.set, 'color_slot_2'),
-            ball_container.Ball(180, 320, 25, 'gray', self.set, 'color_slot_3'),
-            ball_container.Ball(240, 320, 25, 'gray', self.set, 'color_slot_4'),
+            ball_container.Ball(130, 400, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(190, 400, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(250, 400, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(310, 400, 25, 'gray', self.set, 'color_slot_4'),
 
-            ball_container.Ball(60, 260, 25, 'gray', self.set, 'color_slot_1'),
-            ball_container.Ball(120, 260, 25, 'gray', self.set, 'color_slot_2'),
-            ball_container.Ball(180, 260, 25, 'gray', self.set, 'color_slot_3'),
-            ball_container.Ball(240, 260, 25, 'gray', self.set, 'color_slot_4'),
+            ball_container.Ball(130, 340, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(190, 340, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(250, 340, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(310, 340, 25, 'gray', self.set, 'color_slot_4'),
 
-            ball_container.Ball(60, 200, 25, 'gray', self.set, 'color_slot_1'),
-            ball_container.Ball(120, 200, 25, 'gray', self.set, 'color_slot_2'),
-            ball_container.Ball(180, 200, 25, 'gray', self.set, 'color_slot_3'),
-            ball_container.Ball(240, 200, 25, 'gray', self.set, 'color_slot_4'),
+            ball_container.Ball(130, 280, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(190, 280, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(250, 280, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(310, 280, 25, 'gray', self.set, 'color_slot_4'),
 
-            ball_container.Ball(60, 140, 25, 'gray', self.set, 'color_slot_1'),
-            ball_container.Ball(120, 140, 25, 'gray', self.set, 'color_slot_2'),
-            ball_container.Ball(180, 140, 25, 'gray', self.set, 'color_slot_3'),
-            ball_container.Ball(240, 140, 25, 'gray', self.set, 'color_slot_4'),
+            ball_container.Ball(130, 220, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(190, 220, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(250, 220, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(310, 220, 25, 'gray', self.set, 'color_slot_4'),
 
-            ball_container.Ball(60, 80, 25, 'gray', self.set, 'color_slot_1'),
-            ball_container.Ball(120, 80, 25, 'gray', self.set, 'color_slot_2'),
-            ball_container.Ball(180, 80, 25, 'gray', self.set, 'color_slot_3'),
-            ball_container.Ball(240, 80, 25, 'gray', self.set, 'color_slot_4'),
+            ball_container.Ball(130, 160, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(190, 160, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(250, 160, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(310, 160, 25, 'gray', self.set, 'color_slot_4'),
 
-            ball_container.Ball(60, 20, 25, 'gray', self.set, 'color_slot_1'),
-            ball_container.Ball(120, 20, 25, 'gray', self.set, 'color_slot_2'),
-            ball_container.Ball(180, 20, 25, 'gray', self.set, 'color_slot_3'),
-            ball_container.Ball(240, 20, 25, 'gray', self.set, 'color_slot_4')
+            ball_container.Ball(130, 100, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(190, 100, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(250, 100, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(310, 100, 25, 'gray', self.set, 'color_slot_4')
         ]
 
         self.ball_result = [
-            ball_container.Ball(300, 440, 25, 'gray', None, None),
-            ball_container.Ball(360, 440, 25, 'gray', None, None),
-            ball_container.Ball(420, 440, 25, 'gray', None, None),
-            ball_container.Ball(480, 440, 25, 'gray', None, None),
+            ball_container.Ball(390, 520, 25, 'gray', None, None),
+            ball_container.Ball(450, 520, 25, 'gray', None, None),
+            ball_container.Ball(510, 520, 25, 'gray', None, None),
+            ball_container.Ball(570, 520, 25, 'gray', None, None),
 
-            ball_container.Ball(300, 380, 25, 'gray', None, None),
-            ball_container.Ball(360, 380, 25, 'gray', None, None),
-            ball_container.Ball(420, 380, 25, 'gray', None, None),
-            ball_container.Ball(480, 380, 25, 'gray', None, None),
+            ball_container.Ball(390, 460, 25, 'gray', None, None),
+            ball_container.Ball(450, 460, 25, 'gray', None, None),
+            ball_container.Ball(510, 460, 25, 'gray', None, None),
+            ball_container.Ball(570, 460, 25, 'gray', None, None),
 
-            ball_container.Ball(300, 320, 25, 'gray', None, None),
-            ball_container.Ball(360, 320, 25, 'gray', None, None),
-            ball_container.Ball(420, 320, 25, 'gray', None, None),
-            ball_container.Ball(480, 320, 25, 'gray', None, None),
+            ball_container.Ball(390, 400, 25, 'gray', None, None),
+            ball_container.Ball(450, 400, 25, 'gray', None, None),
+            ball_container.Ball(510, 400, 25, 'gray', None, None),
+            ball_container.Ball(570, 400, 25, 'gray', None, None),
 
-            ball_container.Ball(300, 260, 25, 'gray', None, None),
-            ball_container.Ball(360, 260, 25, 'gray', None, None),
-            ball_container.Ball(420, 260, 25, 'gray', None, None),
-            ball_container.Ball(480, 260, 25, 'gray', None, None),
+            ball_container.Ball(390, 340, 25, 'gray', None, None),
+            ball_container.Ball(450, 340, 25, 'gray', None, None),
+            ball_container.Ball(510, 340, 25, 'gray', None, None),
+            ball_container.Ball(570, 340, 25, 'gray', None, None),
 
-            ball_container.Ball(300, 200, 25, 'gray', None, None),
-            ball_container.Ball(360, 200, 25, 'gray', None, None),
-            ball_container.Ball(420, 200, 25, 'gray', None, None),
-            ball_container.Ball(480, 200, 25, 'gray', None, None),
+            ball_container.Ball(390, 280, 25, 'gray', None, None),
+            ball_container.Ball(450, 280, 25, 'gray', None, None),
+            ball_container.Ball(510, 280, 25, 'gray', None, None),
+            ball_container.Ball(570, 280, 25, 'gray', None, None),
 
-            ball_container.Ball(300, 140, 25, 'gray', None, None),
-            ball_container.Ball(360, 140, 25, 'gray', None, None),
-            ball_container.Ball(420, 140, 25, 'gray', None, None),
-            ball_container.Ball(480, 140, 25, 'gray', None, None),
+            ball_container.Ball(390, 220, 25, 'gray', None, None),
+            ball_container.Ball(450, 220, 25, 'gray', None, None),
+            ball_container.Ball(510, 220, 25, 'gray', None, None),
+            ball_container.Ball(570, 220, 25, 'gray', None, None),
 
-            ball_container.Ball(300, 80, 25, 'gray', None, None),
-            ball_container.Ball(360, 80, 25, 'gray', None, None),
-            ball_container.Ball(420, 80, 25, 'gray', None, None),
-            ball_container.Ball(480, 80, 25, 'gray', None, None),
+            ball_container.Ball(390, 160, 25, 'gray', None, None),
+            ball_container.Ball(450, 160, 25, 'gray', None, None),
+            ball_container.Ball(510, 160, 25, 'gray', None, None),
+            ball_container.Ball(570, 160, 25, 'gray', None, None),
 
-            ball_container.Ball(300, 20, 25, 'gray', None, None),
-            ball_container.Ball(360, 20, 25, 'gray', None, None),
-            ball_container.Ball(420, 20, 25, 'gray', None, None),
-            ball_container.Ball(480, 20, 25, 'gray', None, None)
+            ball_container.Ball(390, 100, 25, 'gray', None, None),
+            ball_container.Ball(450, 100, 25, 'gray', None, None),
+            ball_container.Ball(510, 100, 25, 'gray', None, None),
+            ball_container.Ball(570, 100, 25, 'gray', None, None)
         ]
 
         self.opponent_balls = [
-            ball_container.Ball(560, 440, 25, 'gray', None, None),
-            ball_container.Ball(620, 440, 25, 'gray', None, None),
-            ball_container.Ball(680, 440, 25, 'gray', None, None),
-            ball_container.Ball(740, 440, 25, 'gray', None, None),
+            ball_container.Ball(714, 520, 25, 'gray', None, None),
+            ball_container.Ball(774, 520, 25, 'gray', None, None),
+            ball_container.Ball(834, 520, 25, 'gray', None, None),
+            ball_container.Ball(894, 520, 25, 'gray', None, None),
 
-            ball_container.Ball(560, 380, 25, 'gray', None, None),
-            ball_container.Ball(620, 380, 25, 'gray', None, None),
-            ball_container.Ball(680, 380, 25, 'gray', None, None),
-            ball_container.Ball(740, 380, 25, 'gray', None, None),
+            ball_container.Ball(714, 460, 25, 'gray', None, None),
+            ball_container.Ball(774, 460, 25, 'gray', None, None),
+            ball_container.Ball(834, 460, 25, 'gray', None, None),
+            ball_container.Ball(894, 460, 25, 'gray', None, None),
 
-            ball_container.Ball(560, 320, 25, 'gray', None, None),
-            ball_container.Ball(620, 320, 25, 'gray', None, None),
-            ball_container.Ball(680, 320, 25, 'gray', None, None),
-            ball_container.Ball(740, 320, 25, 'gray', None, None),
+            ball_container.Ball(714, 400, 25, 'gray', None, None),
+            ball_container.Ball(774, 400, 25, 'gray', None, None),
+            ball_container.Ball(834, 400, 25, 'gray', None, None),
+            ball_container.Ball(894, 400, 25, 'gray', None, None),
 
-            ball_container.Ball(560, 260, 25, 'gray', None, None),
-            ball_container.Ball(620, 260, 25, 'gray', None, None),
-            ball_container.Ball(680, 260, 25, 'gray', None, None),
-            ball_container.Ball(740, 260, 25, 'gray', None, None),
+            ball_container.Ball(714, 340, 25, 'gray', None, None),
+            ball_container.Ball(774, 340, 25, 'gray', None, None),
+            ball_container.Ball(834, 340, 25, 'gray', None, None),
+            ball_container.Ball(894, 340, 25, 'gray', None, None),
 
-            ball_container.Ball(560, 200, 25, 'gray', None, None),
-            ball_container.Ball(620, 200, 25, 'gray', None, None),
-            ball_container.Ball(680, 200, 25, 'gray', None, None),
-            ball_container.Ball(740, 200, 25, 'gray', None, None),
+            ball_container.Ball(714, 280, 25, 'gray', None, None),
+            ball_container.Ball(774, 280, 25, 'gray', None, None),
+            ball_container.Ball(834, 280, 25, 'gray', None, None),
+            ball_container.Ball(894, 280, 25, 'gray', None, None),
 
-            ball_container.Ball(560, 140, 25, 'gray', None, None),
-            ball_container.Ball(620, 140, 25, 'gray', None, None),
-            ball_container.Ball(680, 140, 25, 'gray', None, None),
-            ball_container.Ball(740, 140, 25, 'gray', None, None),
+            ball_container.Ball(714, 220, 25, 'gray', None, None),
+            ball_container.Ball(774, 220, 25, 'gray', None, None),
+            ball_container.Ball(834, 220, 25, 'gray', None, None),
+            ball_container.Ball(894, 220, 25, 'gray', None, None),
 
-            ball_container.Ball(560, 80, 25, 'gray', None, None),
-            ball_container.Ball(620, 80, 25, 'gray', None, None),
-            ball_container.Ball(680, 80, 25, 'gray', None, None),
-            ball_container.Ball(740, 80, 25, 'gray', None, None),
+            ball_container.Ball(714, 160, 25, 'gray', None, None),
+            ball_container.Ball(774, 160, 25, 'gray', None, None),
+            ball_container.Ball(834, 160, 25, 'gray', None, None),
+            ball_container.Ball(894, 160, 25, 'gray', None, None),
 
-            ball_container.Ball(560, 20, 25, 'gray', None, None),
-            ball_container.Ball(620, 20, 25, 'gray', None, None),
-            ball_container.Ball(680, 20, 25, 'gray', None, None),
-            ball_container.Ball(740, 20, 25, 'gray', None, None)
+            ball_container.Ball(714, 100, 25, 'gray', None, None),
+            ball_container.Ball(774, 100, 25, 'gray', None, None),
+            ball_container.Ball(834, 100, 25, 'gray', None, None),
+            ball_container.Ball(894, 100, 25, 'gray', None, None)
         ]
 
         for ball in self.ball_containers:
@@ -250,8 +259,8 @@ class InGameGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(345, 510, 'green', "SEND", consolas_font.consola, 36, self.set, 'send'),
-            rectangle_button.Rectangle(345, 570, 'red', "AGAIN", consolas_font.consola, 36,
+            rectangle_button.Rectangle(512, 630, 'green', "CHECK", consolas_font.consola, 36, self.set, 'send'),
+            rectangle_button.Rectangle(512, 690, 'red', "AGAIN", consolas_font.consola, 36,
                                        self.set, 'look_for_opponent')
         ]
 
@@ -291,6 +300,8 @@ class InGameGUI(GUIState):
 
         self.display.blit(self.rendered_player_1, (self.rendered_player_1_pos_x, self.rendered_player_1_pos_y))
         self.display.blit(self.rendered_player_2, (self.rendered_player_2_pos_x, self.rendered_player_2_pos_y))
+
+        self.display.blit(self.rendered_outcome, (self.rendered_outcome_pos_x, self.rendered_outcome_pos_y))
 
     def set(self, identity, val):
         self.input[identity] = val
@@ -352,6 +363,19 @@ class InGameGUI(GUIState):
         for k in range((self.turn - 1) * 4, self.turn * 4):
             self.ball_containers[k].disable()
 
+        if response['outcome'] == 'winner':
+            self.game_over_message = "You win!"
+            self.rendered_outcome = self.text.render("You win!", 1, (pygame.Color('green')))
+        elif response['outcome'] == 'loser':
+            self.game_over_message = "You lost!"
+            self.rendered_outcome = self.text.render("You lost!", 1, (pygame.Color('red')))
+        elif response['outcome'] == 'withdraw':
+            self.game_over_message = "Withdraw!"
+            self.rendered_outcome = self.text.render("Withdraw!", 1, (pygame.Color('black')))
+
+        self.rendered_outcome_pos_x = display_settings.display_width / 2 - len(self.game_over_message) * 31
+        self.rendered_outcome_pos_y = display_settings.display_height / 2 - 40 / 2
+
     def display_game_leaver(self, response):
         self.rectangle_buttons[0].disable()
         self.rectangle_buttons[0].hide()
@@ -361,6 +385,13 @@ class InGameGUI(GUIState):
 
         for k in range((self.turn - 1) * 4, self.turn * 4):
             self.ball_containers[k].disable()
+
+        if response['outcome'] == 'winner':
+            self.game_over_message = "You won!"
+            self.rendered_outcome = self.text.render("You won!", 1, (pygame.Color('green')))
+
+        self.rendered_outcome_pos_x = display_settings.display_width / 2 - len(self.game_over_message) * 31
+        self.rendered_outcome_pos_y = display_settings.display_height / 2 - 40 / 2
 
     def set_duelers(self, player_1, player_2):
         self.player_1 = player_1
@@ -392,6 +423,14 @@ class InGameGUI(GUIState):
 
         self.rendered_player_2_pos_x = 0
         self.rendered_player_2_pos_y = 0
+
+        self.rendered_outcome_pos_x = 0
+        self.rendered_outcome_pos_y = 0
+
+        self.game_over_message = ""
+
+        self.text = pygame.font.Font(consolas_font.consola, 40)
+        self.rendered_outcome = self.text.render("", 1, (pygame.Color('black')))
 
         self.turn = 1
 
