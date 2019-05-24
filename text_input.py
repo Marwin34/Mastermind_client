@@ -60,3 +60,7 @@ class TextInput:
                 self.visible_part = self.value
 
             self.callback(self.identity, self.value)
+
+    def reset_value(self):
+        self.value = ""
+        self.visible_part = ""
