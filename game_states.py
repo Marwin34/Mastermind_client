@@ -141,9 +141,14 @@ class InGame(GameState):
                 self.table_gui.set_duelers(data['value']['player_1'], data['value']['player_2'])
                 self.gui = self.table_gui
             elif data['type'] == 'table_update':
-                self.gui.display_response(data['value'])
+                self.gui.display_table_update(data['value'])
             elif data['type'] == 'game_over':
-                self.gui.display_game_result(data['value'])
+                self.gui.display_game_over(data['value'])
+            elif data['type'] == 'game_leaver':
+                if self.gui == self.table_gui:
+                    self.gui.display_game_leaver(data['value'])
+                else:
+                    self.next()
 
     def draw(self):
         self.gui.draw()

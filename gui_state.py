@@ -26,7 +26,7 @@ class MainMenuGUI(GUIState):
         }
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(345, 420, 100, 40, 'blue', "LOGIN", consolas_font.consola, 36, self.set, 'login')
+            rectangle_button.Rectangle(345, 420, 'blue', "LOGIN", consolas_font.consola, 36, self.set, 'login')
         ]
 
         self.mouse_observer.register(self.rectangle_buttons[0].hoover, ObserverType.MOUSE_POS_CHANGES)
@@ -78,6 +78,16 @@ class InGameGUI(GUIState):
         self.player_1 = ""
         self.player_2 = ""
 
+        self.text = pygame.font.Font(consolas_font.consola, 32)
+        self.rendered_player_1 = self.text.render("", 1, (pygame.Color('black')))
+        self.rendered_player_2 = self.text.render("", 1, (pygame.Color('black')))
+
+        self.rendered_player_1_pos_x = 0
+        self.rendered_player_1_pos_y = 0
+
+        self.rendered_player_2_pos_x = 0
+        self.rendered_player_2_pos_y = 0
+
         self.input = {
             'send': False,
             'look_for_opponent': False,
@@ -128,7 +138,22 @@ class InGameGUI(GUIState):
             ball_container.Ball(60, 200, 25, 'gray', self.set, 'color_slot_1'),
             ball_container.Ball(120, 200, 25, 'gray', self.set, 'color_slot_2'),
             ball_container.Ball(180, 200, 25, 'gray', self.set, 'color_slot_3'),
-            ball_container.Ball(240, 200, 25, 'gray', self.set, 'color_slot_4')
+            ball_container.Ball(240, 200, 25, 'gray', self.set, 'color_slot_4'),
+
+            ball_container.Ball(60, 140, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(120, 140, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(180, 140, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(240, 140, 25, 'gray', self.set, 'color_slot_4'),
+
+            ball_container.Ball(60, 80, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(120, 80, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(180, 80, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(240, 80, 25, 'gray', self.set, 'color_slot_4'),
+
+            ball_container.Ball(60, 20, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(120, 20, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(180, 20, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(240, 20, 25, 'gray', self.set, 'color_slot_4')
         ]
 
         self.ball_result = [
@@ -155,7 +180,22 @@ class InGameGUI(GUIState):
             ball_container.Ball(300, 200, 25, 'gray', None, None),
             ball_container.Ball(360, 200, 25, 'gray', None, None),
             ball_container.Ball(420, 200, 25, 'gray', None, None),
-            ball_container.Ball(480, 200, 25, 'gray', None, None)
+            ball_container.Ball(480, 200, 25, 'gray', None, None),
+
+            ball_container.Ball(300, 140, 25, 'gray', None, None),
+            ball_container.Ball(360, 140, 25, 'gray', None, None),
+            ball_container.Ball(420, 140, 25, 'gray', None, None),
+            ball_container.Ball(480, 140, 25, 'gray', None, None),
+
+            ball_container.Ball(300, 80, 25, 'gray', None, None),
+            ball_container.Ball(360, 80, 25, 'gray', None, None),
+            ball_container.Ball(420, 80, 25, 'gray', None, None),
+            ball_container.Ball(480, 80, 25, 'gray', None, None),
+
+            ball_container.Ball(300, 20, 25, 'gray', None, None),
+            ball_container.Ball(360, 20, 25, 'gray', None, None),
+            ball_container.Ball(420, 20, 25, 'gray', None, None),
+            ball_container.Ball(480, 20, 25, 'gray', None, None)
         ]
 
         self.opponent_balls = [
@@ -182,7 +222,22 @@ class InGameGUI(GUIState):
             ball_container.Ball(560, 200, 25, 'gray', None, None),
             ball_container.Ball(620, 200, 25, 'gray', None, None),
             ball_container.Ball(680, 200, 25, 'gray', None, None),
-            ball_container.Ball(740, 200, 25, 'gray', None, None)
+            ball_container.Ball(740, 200, 25, 'gray', None, None),
+
+            ball_container.Ball(560, 140, 25, 'gray', None, None),
+            ball_container.Ball(620, 140, 25, 'gray', None, None),
+            ball_container.Ball(680, 140, 25, 'gray', None, None),
+            ball_container.Ball(740, 140, 25, 'gray', None, None),
+
+            ball_container.Ball(560, 80, 25, 'gray', None, None),
+            ball_container.Ball(620, 80, 25, 'gray', None, None),
+            ball_container.Ball(680, 80, 25, 'gray', None, None),
+            ball_container.Ball(740, 80, 25, 'gray', None, None),
+
+            ball_container.Ball(560, 20, 25, 'gray', None, None),
+            ball_container.Ball(620, 20, 25, 'gray', None, None),
+            ball_container.Ball(680, 20, 25, 'gray', None, None),
+            ball_container.Ball(740, 20, 25, 'gray', None, None)
         ]
 
         for ball in self.ball_containers:
@@ -195,8 +250,8 @@ class InGameGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(345, 510, 100, 40, 'green', "SEND", consolas_font.consola, 36, self.set, 'send'),
-            rectangle_button.Rectangle(345, 570, 150, 40, 'red', "WAIT FOR OPPONENT", consolas_font.consola, 36,
+            rectangle_button.Rectangle(345, 510, 'green', "SEND", consolas_font.consola, 36, self.set, 'send'),
+            rectangle_button.Rectangle(345, 570, 'red', "AGAIN", consolas_font.consola, 36,
                                        self.set, 'look_for_opponent')
         ]
 
@@ -234,6 +289,9 @@ class InGameGUI(GUIState):
         for rectangle in self.rectangle_buttons:
             rectangle.draw(self.display)
 
+        self.display.blit(self.rendered_player_1, (self.rendered_player_1_pos_x, self.rendered_player_1_pos_y))
+        self.display.blit(self.rendered_player_2, (self.rendered_player_2_pos_x, self.rendered_player_2_pos_y))
+
     def set(self, identity, val):
         self.input[identity] = val
 
@@ -252,7 +310,7 @@ class InGameGUI(GUIState):
         self.input['color_slot_4'] = 'gray'
 
     def active_row(self):
-        if self.turn < 6:
+        if self.turn < 9:
             for i in range((self.turn - 1) * 4, self.turn * 4):
                 self.ball_containers[i].enable()
 
@@ -260,7 +318,7 @@ class InGameGUI(GUIState):
             for i in range((self.turn - 2) * 4, (self.turn - 1) * 4):
                 self.ball_containers[i].disable()
 
-    def display_response(self, response):
+    def display_table_update(self, response):
         i = (self.turn - 1) * 4
         for color in response['result']:
             self.ball_result[i].set_color(color)
@@ -274,18 +332,48 @@ class InGameGUI(GUIState):
         self.turn = response['turn']
         self.active_row()
 
-    def display_game_result(self, response):
+    def display_game_over(self, response):
         self.rectangle_buttons[0].disable()
         self.rectangle_buttons[0].hide()
 
         self.rectangle_buttons[1].enable()
         self.rectangle_buttons[1].show()
 
-        self.display_response(response)
+        i = (self.turn - 1) * 4
+        for color in response['result']:
+            self.ball_result[i].set_color(color)
+            i += 1
+
+        j = (self.turn - 1) * 4
+        for color in response['opponent']:
+            self.opponent_balls[j].set_color(color)
+            j += 1
+
+        for k in range((self.turn - 1) * 4, self.turn * 4):
+            self.ball_containers[k].disable()
+
+    def display_game_leaver(self, response):
+        self.rectangle_buttons[0].disable()
+        self.rectangle_buttons[0].hide()
+
+        self.rectangle_buttons[1].enable()
+        self.rectangle_buttons[1].show()
+
+        for k in range((self.turn - 1) * 4, self.turn * 4):
+            self.ball_containers[k].disable()
 
     def set_duelers(self, player_1, player_2):
         self.player_1 = player_1
         self.player_2 = player_2
+
+        self.rendered_player_1 = self.text.render(self.player_1, 1, (pygame.Color('black')))
+        self.rendered_player_2 = self.text.render(self.player_2, 1, (pygame.Color('black')))
+
+        self.rendered_player_1_pos_x = 20
+        self.rendered_player_1_pos_y = 10
+
+        self.rendered_player_2_pos_x = 800 - len(self.player_1) * 20
+        self.rendered_player_2_pos_y = 10
 
     def reset_state(self):
         self.reset_input()
@@ -295,6 +383,15 @@ class InGameGUI(GUIState):
 
         self.player_1 = ""
         self.player_2 = ""
+
+        self.rendered_player_1 = self.text.render("", 1, (pygame.Color('black')))
+        self.rendered_player_2 = self.text.render("", 1, (pygame.Color('black')))
+
+        self.rendered_player_1_pos_x = 0
+        self.rendered_player_1_pos_y = 0
+
+        self.rendered_player_2_pos_x = 0
+        self.rendered_player_2_pos_y = 0
 
         self.turn = 1
 
@@ -365,7 +462,7 @@ class CodeDefineGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(345, 420, 100, 40, 'green', "CONFIRM", consolas_font.consola, 36, self.set,
+            rectangle_button.Rectangle(345, 420, 'green', "CONFIRM", consolas_font.consola, 36, self.set,
                                        'code_init')
         ]
 
@@ -430,7 +527,7 @@ class WaitingForOpponentGUI(GUIState):
         self.mouse_observer = mouse_observer
         self.keyboard_observer = keyboard_observer
 
-        self.message_text = "AGAIN"
+        self.message_text = "WAITING FOR OPPONENT ..."
 
         self.message_x = 400 - len(self.message_text) / 2 * 27
         self.message_y = 300 - 50 / 2

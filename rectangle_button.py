@@ -2,7 +2,7 @@ import pygame
 
 
 class Rectangle:
-    def __init__(self, x, y, w, h, color, text, font, font_size, callback, identity):
+    def __init__(self, x, y, color, text, font, font_size, callback, identity):
         self.x = x
         self.y = y
         self.w = len(text) * 21 + 20

@@ -3,6 +3,7 @@ import time
 import pygame
 from game_states import MainMenu, WaitingForOpponent, InGame
 from game_state_type import StateType
+import display_settings
 
 
 class Main:
@@ -11,7 +12,7 @@ class Main:
         self.connected = True
         self.running = True
 
-        self.size = self.width, self.height = [800, 600]
+        self.size = self.width, self.height = [display_settings.display_width, display_settings.display_height]
 
         self.display = pygame.Surface
         self.display = pygame.display.set_mode(size=self.size)
