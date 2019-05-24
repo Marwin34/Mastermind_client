@@ -43,3 +43,7 @@ class Ball:
 
     def enable(self):
         self.active = True
+
+    def reset_value(self):
+        self.expected_color = 'gray'
+        self.color = pygame.Color(self.expected_color)
