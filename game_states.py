@@ -94,6 +94,12 @@ class MainMenu(GameState):
             if event.type == pygame.KEYDOWN:
                 self.k_observer.notify((event.key, event.unicode))
 
+    def reset_state(self):
+        self.reset_commands()
+        self.data_container['nick'] = None
+
+        self.gui.reset_state()
+
 
 class InGame(GameState):
     def __init__(self, quit_callback, change_state_callback, state_type, display, communication_module):
@@ -132,6 +138,7 @@ class InGame(GameState):
             if data['type'] == 'quit':
                 self.quit_callback()
             elif data['type'] == 'start_game':
+                self.table_gui.set_duelers(data['value']['player_1'], data['value']['player_2'])
                 self.gui = self.table_gui
             elif data['type'] == 'table_update':
                 self.gui.display_response(data['value'])
@@ -229,6 +236,7 @@ class InGame(GameState):
 
             if self.commands['look_for_opponent']:
                 self.next()
+                self.gui = self.code_gui
 
         self.reset_commands()
 
@@ -239,6 +247,14 @@ class InGame(GameState):
 
             if event.type == pygame.MOUSEMOTION or event.type == pygame.MOUSEBUTTONDOWN:
                 self.m_observer.notify(pygame.mouse.get_pressed(), pygame.mouse.get_pos())
+
+    def reset_state(self):
+        self.reset_commands()
+
+        self.code_gui.reset_state()
+        self.table_gui.reset_state()
+
+        self.gui = self.code_gui
 
 
 class WaitingForOpponent(GameState):
@@ -318,3 +334,7 @@ class WaitingForOpponent(GameState):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.commands['quit'] = True
+
+    def reset_state(self):
+        self.reset_commands()
+        self.gui.reset_state()

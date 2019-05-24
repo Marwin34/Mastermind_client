@@ -48,6 +48,7 @@ class Main:
         pygame.quit()
 
     def change_state(self, state_type):
+        self.active_state.reset_state()
         if state_type == StateType.MAIN_MENU:
             self.active_state = self.waiting_for_opponent_state
         elif state_type == StateType.WAITING_FOR_OPPONENT:

@@ -6,7 +6,9 @@ from observer_type import ObserverType
 from abstract_gui_state import GUIState
 from text_input import TextInput
 import consolas_font
-#TODO better graphics, send key bug sfter reentering queue, displaying players info
+
+
+# TODO better graphics, send key bug sfter reentering queue, displaying players info
 
 
 class MainMenuGUI(GUIState):
@@ -20,9 +22,7 @@ class MainMenuGUI(GUIState):
 
         self.input = {
             'login': False,
-            'nick': "",
-            'mouse_pos': (0, 0),
-            'mouse_buttons': (0, 0, 0)
+            'nick': ""
         }
 
         self.rectangle_buttons = [
@@ -60,6 +60,11 @@ class MainMenuGUI(GUIState):
     def reset_input(self):
         self.input['login'] = False
 
+    def reset_state(self):
+        self.reset_input()
+        for text_input in self.text_inputs:
+            text_input.reset_value()
+
 
 class InGameGUI(GUIState):
     def __init__(self, display, mouse_observer=None, keyboard_observer=None):
@@ -70,11 +75,12 @@ class InGameGUI(GUIState):
 
         self.display = display
 
+        self.player_1 = ""
+        self.player_2 = ""
+
         self.input = {
             'send': False,
             'look_for_opponent': False,
-            'mouse_pos': (0, 0),
-            'mouse_buttons': (0, 0, 0),
             'color_picker_red': False,
             'color_picker_blue': False,
             'color_picker_green': False,
@@ -270,12 +276,41 @@ class InGameGUI(GUIState):
 
     def display_game_result(self, response):
         self.rectangle_buttons[0].disable()
-        self.rectangle_buttons[1].hide()
+        self.rectangle_buttons[0].hide()
 
         self.rectangle_buttons[1].enable()
         self.rectangle_buttons[1].show()
 
         self.display_response(response)
+
+    def set_duelers(self, player_1, player_2):
+        self.player_1 = player_1
+        self.player_2 = player_2
+
+    def reset_state(self):
+        self.reset_input()
+        self.reset_containers()
+
+        self.picked_color = 'gray'
+
+        self.player_1 = ""
+        self.player_2 = ""
+
+        self.turn = 1
+
+        for ball in self.ball_containers:
+            ball.disable()
+
+        self.active_row()
+
+        for ball in self.ball_containers + self.ball_result + self.opponent_balls:
+            ball.reset_value()
+
+        self.rectangle_buttons[0].show()
+        self.rectangle_buttons[0].enable()
+
+        self.rectangle_buttons[1].hide()
+        self.rectangle_buttons[1].disable()
 
 
 class CodeDefineGUI(GUIState):
@@ -380,13 +415,22 @@ class CodeDefineGUI(GUIState):
         self.input['color_slot_3'] = 'gray'
         self.input['color_slot_4'] = 'gray'
 
+    def reset_state(self):
+        self.reset_input()
+        self.reset_containers()
+
+        self.picked_color = 'gray'
+
+        for ball in self.ball_containers:
+            ball.reset_value()
+
 
 class WaitingForOpponentGUI(GUIState):
     def __init__(self, display, mouse_observer=None, keyboard_observer=None):
         self.mouse_observer = mouse_observer
         self.keyboard_observer = keyboard_observer
 
-        self.message_text = "WAITING FOR OPPONENT ..."
+        self.message_text = "AGAIN"
 
         self.message_x = 400 - len(self.message_text) / 2 * 27
         self.message_y = 300 - 50 / 2
@@ -408,4 +452,7 @@ class WaitingForOpponentGUI(GUIState):
         pass
 
     def reset_input(self):
+        pass
+
+    def reset_state(self):
         pass

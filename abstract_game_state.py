@@ -25,3 +25,7 @@ class GameState(ABC):
     @abstractmethod
     def handle_events(self):
         pass
+
+    @abstractmethod
+    def reset_state(self):
+        pass
