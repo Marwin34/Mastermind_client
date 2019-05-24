@@ -111,7 +111,8 @@ class InGame(GameState):
         self.commands = {
             'send': False,
             'code_init': False,
-            'quit': False
+            'quit': False,
+            'look_for_opponent': False
         }
 
         self.data_container = {
@@ -134,6 +135,8 @@ class InGame(GameState):
                 self.gui = self.table_gui
             elif data['type'] == 'table_update':
                 self.gui.display_response(data['value'])
+            elif data['type'] == 'game_over':
+                self.gui.display_game_result(data['value'])
 
     def draw(self):
         self.gui.draw()
@@ -194,6 +197,7 @@ class InGame(GameState):
         self.commands['send'] = False
         self.commands['quit'] = False
         self.commands['code_init'] = False
+        self.commands['look_for_opponent'] = False
 
         self.data_container['color_slot_1'] = 'gray'
         self.data_container['color_slot_2'] = 'gray'
@@ -213,6 +217,7 @@ class InGame(GameState):
                 self.send()
         else:
             self.commands['send'] = inputs['send']
+            self.commands['look_for_opponent'] = inputs['look_for_opponent']
 
             self.data_container['color_slot_1'] = inputs['color_slot_1']
             self.data_container['color_slot_2'] = inputs['color_slot_2']
@@ -221,6 +226,9 @@ class InGame(GameState):
 
             if self.commands['send'] or self.commands['quit']:
                 self.send()
+
+            if self.commands['look_for_opponent']:
+                self.next()
 
         self.reset_commands()
 
@@ -247,14 +255,20 @@ class WaitingForOpponent(GameState):
             'quit': False
         }
 
+        self.newly_opened = True
+
     def update(self):
         self.handle_events()
         self.gui.update(self.process_input)
 
         data = self.communication.receive()
 
+        if self.newly_opened:  # i dont  like it
+            self.send()
+
         if data:
             if data['type'] == 'joined_table' and data['value']:
+                self.newly_opened = True
                 self.next()
             elif data['type'] == 'quit':
                 self.quit_callback()
@@ -275,6 +289,15 @@ class WaitingForOpponent(GameState):
                 data = {
                     'type': 'quit',
                     'value': 'quit_request'
+                }
+
+                self.communication.send(data)
+            elif self.newly_opened:
+                self.newly_opened = False
+                print(self.newly_opened)
+                data = {
+                    'type': 'join_waiters',
+                    'value': True
                 }
 
                 self.communication.send(data)

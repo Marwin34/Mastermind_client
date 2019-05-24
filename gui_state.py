@@ -6,6 +6,7 @@ from observer_type import ObserverType
 from abstract_gui_state import GUIState
 from text_input import TextInput
 import consolas_font
+#TODO better graphics, send key bug sfter reentering queue, displaying players info
 
 
 class MainMenuGUI(GUIState):
@@ -71,6 +72,7 @@ class InGameGUI(GUIState):
 
         self.input = {
             'send': False,
+            'look_for_opponent': False,
             'mouse_pos': (0, 0),
             'mouse_buttons': (0, 0, 0),
             'color_picker_red': False,
@@ -187,11 +189,19 @@ class InGameGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(345, 510, 100, 40, 'green', "SEND", consolas_font.consola, 36, self.set, 'send')
+            rectangle_button.Rectangle(345, 510, 100, 40, 'green', "SEND", consolas_font.consola, 36, self.set, 'send'),
+            rectangle_button.Rectangle(345, 570, 150, 40, 'red', "WAIT FOR OPPONENT", consolas_font.consola, 36,
+                                       self.set, 'look_for_opponent')
         ]
 
         self.mouse_observer.register(self.rectangle_buttons[0].hoover, ObserverType.MOUSE_POS_CHANGES)
         self.mouse_observer.register(self.rectangle_buttons[0].clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
+
+        self.mouse_observer.register(self.rectangle_buttons[1].hoover, ObserverType.MOUSE_POS_CHANGES)
+        self.mouse_observer.register(self.rectangle_buttons[1].clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
+
+        self.rectangle_buttons[1].hide()
+        self.rectangle_buttons[1].disable()
 
     def update(self, process):
         if self.input['color_picker_blue']:
@@ -223,6 +233,7 @@ class InGameGUI(GUIState):
 
     def reset_input(self):
         self.input['send'] = False
+        self.input['look_for_opponent'] = False
         self.input['color_picker_red'] = False
         self.input['color_picker_green'] = False
         self.input['color_picker_blue'] = False
@@ -245,7 +256,6 @@ class InGameGUI(GUIState):
 
     def display_response(self, response):
         i = (self.turn - 1) * 4
-        print(response['result'])
         for color in response['result']:
             self.ball_result[i].set_color(color)
             i += 1
@@ -257,6 +267,15 @@ class InGameGUI(GUIState):
 
         self.turn = response['turn']
         self.active_row()
+
+    def display_game_result(self, response):
+        self.rectangle_buttons[0].disable()
+        self.rectangle_buttons[1].hide()
+
+        self.rectangle_buttons[1].enable()
+        self.rectangle_buttons[1].show()
+
+        self.display_response(response)
 
 
 class CodeDefineGUI(GUIState):
