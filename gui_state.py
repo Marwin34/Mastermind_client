@@ -27,14 +27,16 @@ class MainMenuGUI(GUIState):
         }
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(345, 420, 'blue', "LOGIN", consolas_font.consola, 36, self.set, 'login')
+            rectangle_button.Rectangle(display_settings.display_width / 2, 420, 'blue', "LOGIN", consolas_font.consola,
+                                       36, self.set, 'login')
         ]
 
         self.mouse_observer.register(self.rectangle_buttons[0].hoover, ObserverType.MOUSE_POS_CHANGES)
         self.mouse_observer.register(self.rectangle_buttons[0].clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.text_inputs = [
-            TextInput(200, 300, 400, 36, consolas_font.consola, 36, self.set, 'nick')
+            TextInput(display_settings.display_width / 2 - 400 / 2, 300, 400, 36, consolas_font.consola, 36, self.set,
+                      'nick')
         ]
 
         self.mouse_observer.register(self.text_inputs[0].hoover, ObserverType.MOUSE_POS_CHANGES)
@@ -400,10 +402,10 @@ class InGameGUI(GUIState):
         self.rendered_player_1 = self.text.render(self.player_1, 1, (pygame.Color('black')))
         self.rendered_player_2 = self.text.render(self.player_2, 1, (pygame.Color('black')))
 
-        self.rendered_player_1_pos_x = 20
+        self.rendered_player_1_pos_x = 130
         self.rendered_player_1_pos_y = 10
 
-        self.rendered_player_2_pos_x = 800 - len(self.player_1) * 20
+        self.rendered_player_2_pos_x = 714
         self.rendered_player_2_pos_y = 10
 
     def reset_state(self):
@@ -458,8 +460,8 @@ class CodeDefineGUI(GUIState):
 
         self.message_text = "Pick code for opponent."
 
-        self.message_x = 400 - len(self.message_text) / 2 * 27
-        self.message_y = 300 - 50 / 2
+        self.message_x = display_settings.display_width / 2 - len(self.message_text) / 2 * 26
+        self.message_y = 260 - 50 / 2
 
         self.text = pygame.font.Font(consolas_font.consola, 50)
         self.rendered_text = self.text.render(self.message_text, 1, (pygame.Color('black')))
@@ -479,10 +481,10 @@ class CodeDefineGUI(GUIState):
         self.picked_color = 'gray'
 
         self.ball_buttons = [
-            ball_button.Ball(550, 440, 25, 'blue', self.set, 'color_picker_blue'),
-            ball_button.Ball(610, 440, 25, 'green', self.set, 'color_picker_green'),
-            ball_button.Ball(670, 440, 25, 'red', self.set, 'color_picker_red'),
-            ball_button.Ball(730, 440, 25, 'yellow', self.set, 'color_picker_yellow')
+            ball_button.Ball(422, 520, 25, 'blue', self.set, 'color_picker_blue'),
+            ball_button.Ball(482, 520, 25, 'green', self.set, 'color_picker_green'),
+            ball_button.Ball(542, 520, 25, 'red', self.set, 'color_picker_red'),
+            ball_button.Ball(602, 520, 25, 'yellow', self.set, 'color_picker_yellow')
         ]
 
         for button in self.ball_buttons:
@@ -490,10 +492,10 @@ class CodeDefineGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.ball_containers = [
-            ball_container.Ball(60, 440, 25, 'gray', self.set, 'color_slot_1'),
-            ball_container.Ball(120, 440, 25, 'gray', self.set, 'color_slot_2'),
-            ball_container.Ball(180, 440, 25, 'gray', self.set, 'color_slot_3'),
-            ball_container.Ball(240, 440, 25, 'gray', self.set, 'color_slot_4')
+            ball_container.Ball(422, 440, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(482, 440, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(542, 440, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(602, 440, 25, 'gray', self.set, 'color_slot_4')
         ]
 
         for button in self.ball_containers:
@@ -501,7 +503,8 @@ class CodeDefineGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(345, 420, 'green', "CONFIRM", consolas_font.consola, 36, self.set,
+            rectangle_button.Rectangle(display_settings.display_width / 2, 600, 'green', "CONFIRM",
+                                       consolas_font.consola, 36, self.set,
                                        'code_init')
         ]
 
@@ -566,10 +569,10 @@ class WaitingForOpponentGUI(GUIState):
         self.mouse_observer = mouse_observer
         self.keyboard_observer = keyboard_observer
 
-        self.message_text = "WAITING FOR OPPONENT ..."
+        self.message_text = "Waiting for opponent."
 
-        self.message_x = 400 - len(self.message_text) / 2 * 27
-        self.message_y = 300 - 50 / 2
+        self.message_x = display_settings.display_width / 2 - len(self.message_text) / 2 * 27
+        self.message_y = display_settings.display_height / 2 - 50 / 2
 
         self.display = display
 

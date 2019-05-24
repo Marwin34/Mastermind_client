@@ -1,5 +1,6 @@
 import numpy as np
 import pygame
+from pygame import gfxdraw
 
 
 class Ball:
@@ -20,9 +21,11 @@ class Ball:
         brighter = pygame.Color(100, 100, 100, 0)
         darker = pygame.Color(50, 50, 50, 0)
         if self.hoovered and self.active:
-            pygame.draw.circle(display, self.color + brighter, (self.x, self.y), self.r)
+            gfxdraw.filled_circle(display, self.x, self.y, self.r, self.color + brighter)
+            gfxdraw.aacircle(display, self.x, self.y, self.r, self.color + brighter)
         else:
-            pygame.draw.circle(display, self.color - darker, (self.x, self.y), self.r)
+            gfxdraw.filled_circle(display, self.x, self.y, self.r, self.color - darker)
+            gfxdraw.aacircle(display, self.x, self.y, self.r, self.color - darker)
 
     def hoover(self, mouse_pos):
         self.hoovered = np.sqrt((self.x - mouse_pos[0]) ** 2 + (self.y - mouse_pos[1]) ** 2) <= self.r
