@@ -97,7 +97,8 @@ class InGameGUI(GUIState):
 
         self.game_over_message = ""
 
-        self.text = pygame.font.Font(consolas_font.consola, 40)
+        self.text = pygame.font.Font(consolas_font.consola, 32)
+        self.outcome_text = pygame.font.Font(consolas_font.consola_b, 70)
         self.rendered_outcome = self.text.render("", 1, (pygame.Color('black')))
 
         self.background = pygame.image.load("images/in_game_bg_3.png")
@@ -371,17 +372,17 @@ class InGameGUI(GUIState):
             self.ball_containers[k].disable()
 
         if response['outcome'] == 'winner':
-            self.game_over_message = "You win!"
-            self.rendered_outcome = self.text.render("You win!", 1, (pygame.Color('green')))
+            self.game_over_message = "You won!"
+            self.rendered_outcome = self.outcome_text.render("You won!", 1, (pygame.Color('green')))
         elif response['outcome'] == 'loser':
             self.game_over_message = "You lost!"
-            self.rendered_outcome = self.text.render("You lost!", 1, (pygame.Color('red')))
+            self.rendered_outcome = self.outcome_text.render("You lost!", 1, (pygame.Color('red')))
         elif response['outcome'] == 'withdraw':
             self.game_over_message = "Withdraw!"
-            self.rendered_outcome = self.text.render("Withdraw!", 1, (pygame.Color('black')))
+            self.rendered_outcome = self.outcome_text.render("Withdraw!", 1, (pygame.Color('black')))
 
-        self.rendered_outcome_pos_x = display_settings.display_width / 2 - len(self.game_over_message) * 31
-        self.rendered_outcome_pos_y = display_settings.display_height / 2 - 40 / 2
+        self.rendered_outcome_pos_x = display_settings.display_width / 2 - len(self.game_over_message) * 35 / 2
+        self.rendered_outcome_pos_y = display_settings.display_height / 2 - 70 / 2
 
     def display_game_leaver(self, response):
         self.rectangle_buttons[0].disable()
@@ -395,10 +396,10 @@ class InGameGUI(GUIState):
 
         if response['outcome'] == 'winner':
             self.game_over_message = "You won!"
-            self.rendered_outcome = self.text.render("You won!", 1, (pygame.Color('green')))
+            self.rendered_outcome = self.outcome_text.render("You win!", 1, (pygame.Color('green')))
 
-        self.rendered_outcome_pos_x = display_settings.display_width / 2 - len(self.game_over_message) * 31
-        self.rendered_outcome_pos_y = display_settings.display_height / 2 - 40 / 2
+        self.rendered_outcome_pos_x = display_settings.display_width / 2 - len(self.game_over_message) * 35 / 2
+        self.rendered_outcome_pos_y = display_settings.display_height / 2 - 70 / 2
 
     def set_duelers(self, player_1, player_2):
         self.player_1 = player_1
