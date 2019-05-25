@@ -315,7 +315,6 @@ class WaitingForOpponent(GameState):
                 self.communication.send(data)
             elif self.newly_opened:
                 self.newly_opened = False
-                print(self.newly_opened)
                 data = {
                     'type': 'join_waiters',
                     'value': True
