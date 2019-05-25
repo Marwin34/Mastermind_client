@@ -99,6 +99,9 @@ class InGameGUI(GUIState):
         self.text = pygame.font.Font(consolas_font.consola, 40)
         self.rendered_outcome = self.text.render("", 1, (pygame.Color('black')))
 
+        self.background = pygame.image.load("images/in_game_bg_2.png")
+        self.background_rect = self.background.get_rect()
+
         self.input = {
             'send': False,
             'look_for_opponent': False,
@@ -293,6 +296,8 @@ class InGameGUI(GUIState):
 
     def draw(self):
         self.display.fill(pygame.Color('cyan'))
+
+        self.display.blit(self.background, self.background_rect)
 
         for ball in self.ball_buttons + self.ball_containers + self.ball_result + self.opponent_balls:
             ball.draw(self.display)
