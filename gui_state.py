@@ -27,7 +27,7 @@ class MainMenuGUI(GUIState):
         }
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(display_settings.display_width / 2, 420, 'blue', "LOGIN", consolas_font.consola,
+            rectangle_button.Rectangle(display_settings.display_width / 2, 420, "play", "LOGIN", consolas_font.consola,
                                        36, self.set, 'login')
         ]
 
@@ -266,8 +266,8 @@ class InGameGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(512, 630, 'green', "CHECK", consolas_font.consola, 36, self.set, 'send'),
-            rectangle_button.Rectangle(512, 690, 'red', "AGAIN", consolas_font.consola, 36,
+            rectangle_button.Rectangle(512, 630, 'play', "CHECK", consolas_font.consola, 36, self.set, 'send'),
+            rectangle_button.Rectangle(512, 690, 'play', "AGAIN", consolas_font.consola, 36,
                                        self.set, 'look_for_opponent')
         ]
 
@@ -510,7 +510,7 @@ class CodeDefineGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(display_settings.display_width / 2, 600, 'green', "CONFIRM",
+            rectangle_button.Rectangle(display_settings.display_width / 2, 600, 'play', "CONFIRM",
                                        consolas_font.consola, 36, self.set,
                                        'code_init')
         ]

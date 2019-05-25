@@ -7,12 +7,9 @@ import pygame
 
 
 class Rectangle:
-    def __init__(self, x, y, color, text, font, font_size, callback, identity):
+    def __init__(self, x, y, name, text, callback, identity):
         self.x = x
         self.y = y
-        self.w = len(text) * 20 + 20
-        self.h = font_size + 10
-        self.color = pygame.Color(color)
 
         self.text_len = len(text)
 
@@ -26,22 +23,21 @@ class Rectangle:
 
         self.hidden = False
 
-        self.text = pygame.font.Font(font, font_size)
-        self.rendered_text = self.text.render(text, 1, (0, 0, 0))
+        self.sprite_n = pygame.image.load("images/" + name + "_n.png")
+        self.sprite_rect_n = self.sprite_n.get_rect()
+
+        self.sprite_h = pygame.image.load("images/" + name + "_h.png")
+        self.sprite_rect_h = self.sprite_h.get_rect()
+
+        self.w = self.sprite_rect_n.width
+        self.h = self.sprite_rect_n.height
 
     def draw(self, display):
         if not self.hidden:
-            brighter = pygame.Color(100, 100, 100, 0)
-            darker = pygame.Color(50, 50, 50, 0)
             if self.hoovered:
-                pygame.draw.rect(display, self.color + brighter,
-                                 (self.x - self.w / 2, self.y - self.h / 2, self.w, self.h))
+                display.blit(self.sprite_h, (self.x - self.w / 2, self.y - self.h / 2))
             else:
-                pygame.draw.rect(display, self.color - darker,
-                                 (self.x - self.w / 2, self.y - self.h / 2, self.w, self.h))
-
-            display.blit(self.rendered_text,
-                         (self.x - self.w / 2 + 10, self.y - (self.h / 2) + 5))
+                display.blit(self.sprite_n, (self.x - self.w / 2, self.y - self.h / 2))
 
     def hoover(self, mouse_pos):
         self.hoovered = (self.x - self.w / 2 <= mouse_pos[0] <= self.x - self.w / 2 + self.w and
