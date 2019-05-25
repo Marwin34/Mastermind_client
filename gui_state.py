@@ -27,8 +27,7 @@ class MainMenuGUI(GUIState):
         }
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(display_settings.display_width / 2, 420, "play", "LOGIN", consolas_font.consola,
-                                       36, self.set, 'login')
+            rectangle_button.Rectangle(display_settings.display_width / 2, 420, "play", self.set, 'login')
         ]
 
         self.mouse_observer.register(self.rectangle_buttons[0].hoover, ObserverType.MOUSE_POS_CHANGES)
@@ -266,9 +265,8 @@ class InGameGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(512, 630, 'play', "CHECK", consolas_font.consola, 36, self.set, 'send'),
-            rectangle_button.Rectangle(512, 690, 'play', "AGAIN", consolas_font.consola, 36,
-                                       self.set, 'look_for_opponent')
+            rectangle_button.Rectangle(512, 630, 'send', self.set, 'send'),
+            rectangle_button.Rectangle(512, 690, 'retry', self.set, 'look_for_opponent')
         ]
 
         self.mouse_observer.register(self.rectangle_buttons[0].hoover, ObserverType.MOUSE_POS_CHANGES)
@@ -277,7 +275,7 @@ class InGameGUI(GUIState):
         self.mouse_observer.register(self.rectangle_buttons[1].hoover, ObserverType.MOUSE_POS_CHANGES)
         self.mouse_observer.register(self.rectangle_buttons[1].clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
-        self.rectangle_buttons[1].hide()
+        # self.rectangle_buttons[1].hide()
         self.rectangle_buttons[1].disable()
 
     def update(self, process):
@@ -354,10 +352,10 @@ class InGameGUI(GUIState):
 
     def display_game_over(self, response):
         self.rectangle_buttons[0].disable()
-        self.rectangle_buttons[0].hide()
+        # self.rectangle_buttons[0].hide()
 
         self.rectangle_buttons[1].enable()
-        self.rectangle_buttons[1].show()
+        # self.rectangle_buttons[1].show()
 
         i = (self.turn - 1) * 4
         for color in response['result']:
@@ -387,10 +385,10 @@ class InGameGUI(GUIState):
 
     def display_game_leaver(self, response):
         self.rectangle_buttons[0].disable()
-        self.rectangle_buttons[0].hide()
+        # self.rectangle_buttons[0].hide()
 
         self.rectangle_buttons[1].enable()
-        self.rectangle_buttons[1].show()
+        # self.rectangle_buttons[1].show()
 
         for k in range((self.turn - 1) * 4, self.turn * 4):
             self.ball_containers[k].disable()
@@ -451,10 +449,10 @@ class InGameGUI(GUIState):
         for ball in self.ball_containers + self.ball_result + self.opponent_balls:
             ball.reset_value()
 
-        self.rectangle_buttons[0].show()
+        # self.rectangle_buttons[0].show()
         self.rectangle_buttons[0].enable()
 
-        self.rectangle_buttons[1].hide()
+        # self.rectangle_buttons[1].hide()
         self.rectangle_buttons[1].disable()
 
 
@@ -510,8 +508,7 @@ class CodeDefineGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(display_settings.display_width / 2, 600, 'play', "CONFIRM",
-                                       consolas_font.consola, 36, self.set,
+            rectangle_button.Rectangle(display_settings.display_width / 2, 600, 'set', self.set,
                                        'code_init')
         ]
 
