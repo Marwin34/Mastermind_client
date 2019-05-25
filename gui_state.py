@@ -101,7 +101,7 @@ class InGameGUI(GUIState):
         self.outcome_text = pygame.font.Font(consolas_font.consola_b, 70)
         self.rendered_outcome = self.text.render("", 1, (pygame.Color('black')))
 
-        self.background = pygame.image.load("images/in_game_bg_3.png")
+        self.background = pygame.image.load("images/in_game_bg.jpg")
         self.background_rect = self.background.get_rect()
 
         self.input = {
@@ -266,8 +266,8 @@ class InGameGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(512, 630, 'send', self.set, 'send'),
-            rectangle_button.Rectangle(512, 690, 'retry', self.set, 'look_for_opponent')
+            rectangle_button.Rectangle(512, 630, 'play', self.set, 'send'),
+            rectangle_button.Rectangle(512, 690, 'play', self.set, 'look_for_opponent')
         ]
 
         self.mouse_observer.register(self.rectangle_buttons[0].hoover, ObserverType.MOUSE_POS_CHANGES)
@@ -276,7 +276,7 @@ class InGameGUI(GUIState):
         self.mouse_observer.register(self.rectangle_buttons[1].hoover, ObserverType.MOUSE_POS_CHANGES)
         self.mouse_observer.register(self.rectangle_buttons[1].clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
-        # self.rectangle_buttons[1].hide()
+        self.rectangle_buttons[1].hide()
         self.rectangle_buttons[1].disable()
 
     def update(self, process):
@@ -396,7 +396,7 @@ class InGameGUI(GUIState):
 
         if response['outcome'] == 'winner':
             self.game_over_message = "You won!"
-            self.rendered_outcome = self.outcome_text.render("You win!", 1, (pygame.Color('green')))
+            self.rendered_outcome = self.outcome_text.render("You won!", 1, (pygame.Color('green')))
 
         self.rendered_outcome_pos_x = display_settings.display_width / 2 - len(self.game_over_message) * 35 / 2
         self.rendered_outcome_pos_y = display_settings.display_height / 2 - 70 / 2
@@ -509,7 +509,7 @@ class CodeDefineGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(display_settings.display_width / 2, 600, 'set', self.set,
+            rectangle_button.Rectangle(display_settings.display_width / 2, 600, 'play', self.set,
                                        'code_init')
         ]
 
