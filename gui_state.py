@@ -9,9 +9,6 @@ import consolas_font
 import display_settings
 
 
-# TODO better graphics, send key bug sfter reentering queue, displaying players info
-
-
 class MainMenuGUI(GUIState):
     def __init__(self, display, mouse_observer=None, keyboard_observer=None):
         self.mouse_observer = mouse_observer
@@ -20,6 +17,9 @@ class MainMenuGUI(GUIState):
         self.display = display
 
         self.font_path = "consolas/CONSOLA.TTF"
+
+        self.background = pygame.image.load("images/main_menu.png")
+        self.background_rect = self.background.get_rect()
 
         self.input = {
             'login': False,
@@ -49,7 +49,9 @@ class MainMenuGUI(GUIState):
         self.reset_input()
 
     def draw(self):
-        self.display.fill(pygame.Color('green'))
+        self.display.fill(pygame.Color(85, 182, 85))
+
+        self.display.blit(self.background, self.background_rect)
 
         for rectangle in self.rectangle_buttons:
             rectangle.draw(self.display)
@@ -99,7 +101,7 @@ class InGameGUI(GUIState):
         self.text = pygame.font.Font(consolas_font.consola, 40)
         self.rendered_outcome = self.text.render("", 1, (pygame.Color('black')))
 
-        self.background = pygame.image.load("images/in_game_bg_2.png")
+        self.background = pygame.image.load("images/in_game_bg_3.png")
         self.background_rect = self.background.get_rect()
 
         self.input = {
@@ -295,7 +297,7 @@ class InGameGUI(GUIState):
         self.reset_input()
 
     def draw(self):
-        self.display.fill(pygame.Color('cyan'))
+        self.display.fill(pygame.Color(85, 182, 85))
 
         self.display.blit(self.background, self.background_rect)
 
@@ -533,7 +535,7 @@ class CodeDefineGUI(GUIState):
         self.reset_input()
 
     def draw(self):
-        self.display.fill(pygame.Color('blue'))
+        self.display.fill(pygame.Color(85, 182, 85))
 
         self.display.blit(self.rendered_text, (self.message_x, self.message_y))
 
@@ -588,7 +590,7 @@ class WaitingForOpponentGUI(GUIState):
         process(None)
 
     def draw(self):
-        self.display.fill(pygame.Color('blue'))
+        self.display.fill(pygame.Color(85, 182, 85))
 
         self.display.blit(self.rendered_text, (self.message_x, self.message_y))
 
