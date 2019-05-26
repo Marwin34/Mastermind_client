@@ -266,8 +266,8 @@ class InGameGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(512, 630, 'play', self.set, 'send'),
-            rectangle_button.Rectangle(512, 690, 'play', self.set, 'look_for_opponent')
+            rectangle_button.Rectangle(512, 630, 'send', self.set, 'send'),
+            rectangle_button.Rectangle(512, 690, 'retry', self.set, 'look_for_opponent')
         ]
 
         self.mouse_observer.register(self.rectangle_buttons[0].hoover, ObserverType.MOUSE_POS_CHANGES)
@@ -472,6 +472,9 @@ class CodeDefineGUI(GUIState):
         self.text = pygame.font.Font(consolas_font.consola, 50)
         self.rendered_text = self.text.render(self.message_text, 1, (pygame.Color('black')))
 
+        self.background = pygame.image.load("images/code_set_up_bg.png")
+        self.background_rect = self.background.get_rect()
+
         self.input = {
             'code_init': False,
             'color_picker_red': False,
@@ -487,10 +490,10 @@ class CodeDefineGUI(GUIState):
         self.picked_color = 'gray'
 
         self.ball_buttons = [
-            ball_button.Ball(422, 520, 25, 'blue', self.set, 'color_picker_blue'),
-            ball_button.Ball(482, 520, 25, 'green', self.set, 'color_picker_green'),
-            ball_button.Ball(542, 520, 25, 'red', self.set, 'color_picker_red'),
-            ball_button.Ball(602, 520, 25, 'yellow', self.set, 'color_picker_yellow')
+            ball_button.Ball(422, 495, 25, 'blue', self.set, 'color_picker_blue'),
+            ball_button.Ball(482, 495, 25, 'green', self.set, 'color_picker_green'),
+            ball_button.Ball(542, 495, 25, 'red', self.set, 'color_picker_red'),
+            ball_button.Ball(602, 495, 25, 'yellow', self.set, 'color_picker_yellow')
         ]
 
         for button in self.ball_buttons:
@@ -498,10 +501,10 @@ class CodeDefineGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.ball_containers = [
-            ball_container.Ball(422, 440, 25, 'gray', self.set, 'color_slot_1'),
-            ball_container.Ball(482, 440, 25, 'gray', self.set, 'color_slot_2'),
-            ball_container.Ball(542, 440, 25, 'gray', self.set, 'color_slot_3'),
-            ball_container.Ball(602, 440, 25, 'gray', self.set, 'color_slot_4')
+            ball_container.Ball(422, 415, 25, 'gray', self.set, 'color_slot_1'),
+            ball_container.Ball(482, 415, 25, 'gray', self.set, 'color_slot_2'),
+            ball_container.Ball(542, 415, 25, 'gray', self.set, 'color_slot_3'),
+            ball_container.Ball(602, 415, 25, 'gray', self.set, 'color_slot_4')
         ]
 
         for button in self.ball_containers:
@@ -509,7 +512,7 @@ class CodeDefineGUI(GUIState):
             self.mouse_observer.register(button.clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
         self.rectangle_buttons = [
-            rectangle_button.Rectangle(display_settings.display_width / 2, 600, 'play', self.set,
+            rectangle_button.Rectangle(display_settings.display_width / 2, 600, 'set', self.set,
                                        'code_init')
         ]
 
@@ -534,6 +537,8 @@ class CodeDefineGUI(GUIState):
 
     def draw(self):
         self.display.fill(pygame.Color(85, 182, 85))
+
+        self.display.blit(self.background, self.background_rect)
 
         self.display.blit(self.rendered_text, (self.message_x, self.message_y))
 
