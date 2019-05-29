@@ -51,7 +51,10 @@ class MainMenu(GameState):
                 print("Connection established.")
                 self.send()
             else:
-                print("Unable to connect to server, check your internet connection or try again later.")
+                if self.commands['quit']:
+                    self.quit_callback()
+                else:
+                    print("Unable to connect to server, check your internet connection or try again later.")
         else:
             if self.commands['login']:
                 data = {

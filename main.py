@@ -17,7 +17,7 @@ class Main:
         self.display = pygame.Surface
         self.display = pygame.display.set_mode(size=self.size)
 
-        self.communication_module = communication.ComSupervisor("127.0.0.1", 50001)
+        self.communication_module = communication.ComSupervisor()
 
         self.time_stamp = 0.016  # 60 FPS
 

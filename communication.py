@@ -1,13 +1,13 @@
 import select
-import selectors
 import socket
 import message_util
+from conn_conf import conf_addr, conf_port
 
 
 class ComSupervisor:
-    def __init__(self, addr, port):
-        self.port = port
-        self.addr = addr
+    def __init__(self):
+        self.port = conf_port
+        self.addr = conf_addr
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
