@@ -276,7 +276,6 @@ class InGameGUI(GUIState):
         self.mouse_observer.register(self.rectangle_buttons[1].hoover, ObserverType.MOUSE_POS_CHANGES)
         self.mouse_observer.register(self.rectangle_buttons[1].clicked, ObserverType.MOUSE_BUTTONS_CHANGES)
 
-        self.rectangle_buttons[1].hide()
         self.rectangle_buttons[1].disable()
 
     def update(self, process):
@@ -353,10 +352,8 @@ class InGameGUI(GUIState):
 
     def display_game_over(self, response):
         self.rectangle_buttons[0].disable()
-        # self.rectangle_buttons[0].hide()
 
         self.rectangle_buttons[1].enable()
-        # self.rectangle_buttons[1].show()
 
         i = (self.turn - 1) * 4
         for color in response['result']:
