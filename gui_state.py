@@ -375,8 +375,8 @@ class InGameGUI(GUIState):
             self.game_over_message = "You lost!"
             self.rendered_outcome = self.outcome_text.render("You lost!", 1, (pygame.Color('red')))
         elif response['outcome'] == 'withdraw':
-            self.game_over_message = "Withdraw!"
-            self.rendered_outcome = self.outcome_text.render("Withdraw!", 1, (pygame.Color('black')))
+            self.game_over_message = "Draw!"
+            self.rendered_outcome = self.outcome_text.render("Draw!", 1, (pygame.Color('black')))
 
         self.rendered_outcome_pos_x = display_settings.display_width / 2 - len(self.game_over_message) * 35 / 2
         self.rendered_outcome_pos_y = display_settings.display_height / 2 - 70 / 2
